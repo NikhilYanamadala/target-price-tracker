@@ -9,42 +9,46 @@ export class PriceTrackerStack extends cdk.Stack {
     super(scope, id, props);
 
     // VPC
-    const vpc = new ec2.Vpc(this, 'HelloWorldVpc', {
+    const vpc = new ec2.Vpc(this, 'Vpc', {
       maxAzs: 2,
       natGateways: 1 // Cost optimization
     });
 
     // ECS Cluster
-    const cluster = new ecs.Cluster(this, 'HelloWorldCluster', {
+    const cluster = new ecs.Cluster(this, 'Cluster', {
       vpc: vpc
     });
 
     // Single Bundled Service
-    const service = new ecsPatterns.ApplicationLoadBalancedFargateService(this, 'HelloWorldService', {
-      cluster: cluster,
-      cpu: 256,
-      memoryLimitMiB: 512,
-      desiredCount: 1,
-      taskImageOptions: {
-        image: ecs.ContainerImage.fromAsset('..', {
-          file: 'Dockerfile',
-          exclude: [
-            'infrastructure/cdk.out',    // Critical!
-            'infrastructure/node_modules',
-            '**/node_modules',
-            '.git',
-            '.github',
-            '**/*.log'
-          ]
-        }),
-        containerPort: 8080,
-        environment: {
-          'SPRING_PROFILES_ACTIVE': 'prod'
-        }
-      },
-      publicLoadBalancer: true,
-      healthCheckGracePeriod: cdk.Duration.minutes(5)
-    });
+    const service = new ecsPatterns.ApplicationLoadBalancedFargateService(
+      this,
+      "PriceTrackerService",
+      {
+        cluster: cluster,
+        cpu: 256,
+        memoryLimitMiB: 512,
+        desiredCount: 1,
+        taskImageOptions: {
+          image: ecs.ContainerImage.fromAsset("..", {
+            file: "Dockerfile",
+            exclude: [
+              "infrastructure/cdk.out", // Critical!
+              "infrastructure/node_modules",
+              "**/node_modules",
+              ".git",
+              ".github",
+              "**/*.log",
+            ],
+          }),
+          containerPort: 8080,
+          environment: {
+            SPRING_PROFILES_ACTIVE: "prod",
+          },
+        },
+        publicLoadBalancer: true,
+        healthCheckGracePeriod: cdk.Duration.minutes(5),
+      }
+    );
 
     // Health check configuration
     service.targetGroup.configureHealthCheck({

@@ -26,3 +26,7 @@ spring:
 
 server:
   port: ${PORT:8080}
+
+logging:
+  level:
+    root: error

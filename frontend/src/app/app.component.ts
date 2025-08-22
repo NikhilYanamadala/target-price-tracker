@@ -8,7 +8,7 @@ import { environment } from '../environments/environment';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'Hello World App';
+  title = 'Price Tracker App';
   message = '';
   loading = false;
 
