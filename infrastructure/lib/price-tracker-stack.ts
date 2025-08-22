@@ -27,7 +27,15 @@ export class PriceTrackerStack extends cdk.Stack {
       desiredCount: 1,
       taskImageOptions: {
         image: ecs.ContainerImage.fromAsset('..', {
-          file: 'Dockerfile'
+          file: 'Dockerfile',
+          exclude: [
+            'infrastructure/cdk.out',    // Critical!
+            'infrastructure/node_modules',
+            '**/node_modules',
+            '.git',
+            '.github',
+            '**/*.log'
+          ]
         }),
         containerPort: 8080,
         environment: {

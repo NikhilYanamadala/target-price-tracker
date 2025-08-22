@@ -1,69 +1,65 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.2.0'
-	id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
 
-group = 'com.nik'
+group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
-
-// Task to build Angular frontend
-task buildFrontend(type: Exec) {
-	group = 'build'
-	description = 'Build Angular frontend'
-
-	workingDir '../frontend'
-
-	// Use npm or yarn based on what's available
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'npm.cmd', 'run', 'build:backend'
-	} else {
-		commandLine 'npm', 'run', 'build:backend'
-	}
-}
-
-// Task to install npm dependencies
-task installFrontendDeps(type: Exec) {
-	group = 'build'
-	description = 'Install frontend dependencies'
-
-	workingDir '../frontend'
-
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'npm.cmd', 'install'
-	} else {
-		commandLine 'npm', 'install'
-	}
-}
-
-// Make sure frontend is built before backend
-buildFrontend.dependsOn installFrontendDeps
-processResources.dependsOn buildFrontend
 
 // Ensure static resources are included in JAR
 sourceSets {
-	main {
-		resources {
-			srcDirs = ['src/main/resources']
-		}
-	}
+    main {
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 jar {
-	enabled = false
+    enabled = false
 }
+
+// Optional: Task for local development (when npm is available)
+task buildFrontendLocal(type: Exec) {
+    group = 'build'
+    description = 'Build Angular frontend for local development'
+    
+    workingDir '../frontend'
+    
+    // Only run if frontend directory exists and npm is available
+    onlyIf {
+        file('../frontend').exists() && 
+        (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows') ? 
+            new File('C:/Program Files/nodejs/npm.cmd').exists() || 
+            new File('C:/Program Files (x86)/nodejs/npm.cmd').exists() :
+            Runtime.getRuntime().exec("which npm").waitFor() == 0)
+    }
+    
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine 'npm.cmd', 'run', 'build:backend'
+    } else {
+        commandLine 'npm', 'run', 'build:backend'
+    }
+    
+    // Don't fail the build if this task fails
+    ignoreExitValue = true
+}
+
+// Don't automatically depend on frontend build for Docker builds
+// buildFrontendLocal can be run manually: ./gradlew buildFrontendLocal bootJar

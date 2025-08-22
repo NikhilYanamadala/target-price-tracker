@@ -1,15 +1,52 @@
-# .dockerignore
+# .dockerignore - Place in project root (target-price-tracker/)
+
+# Node modules
 node_modules
-.git
-.github
-.idea
-.vscode
-*.log
-.DS_Store
-frontend/node_modules
+**/node_modules
+
+# Build outputs
 frontend/dist
 frontend/.angular
 backend/.gradle
 backend/build
-infrastructure/node_modules
+
+# CDK outputs (CRITICAL - prevents infinite recursion)
 infrastructure/cdk.out
+infrastructure/node_modules
+**/cdk.out
+
+# Version control
+.git
+.gitignore
+
+# IDE files
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# GitHub Actions
+.github
