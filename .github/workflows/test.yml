@@ -1,6 +1,9 @@
 name: Test AWS Connection
 on:
   workflow_dispatch: # Manual trigger
+  push:
+    branches:
+      - 'feature/*'
 
 jobs:
   test-aws:
