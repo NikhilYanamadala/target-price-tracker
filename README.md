@@ -1,2 +1,2 @@
 # target-price-tracker
-To track the target price
+To track the target prices
