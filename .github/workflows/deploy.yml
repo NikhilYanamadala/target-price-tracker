@@ -2,6 +2,9 @@ name: Deploy Bundled App
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - 'feature/*'
 
 env:
   AWS_REGION: us-east-1
