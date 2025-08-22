@@ -26,7 +26,9 @@ export class PriceTrackerStack extends cdk.Stack {
       memoryLimitMiB: 512,
       desiredCount: 1,
       taskImageOptions: {
-        image: ecs.ContainerImage.fromAsset('../backend'),
+        image: ecs.ContainerImage.fromAsset('.', {
+          file: 'Dockerfile'
+        }),
         containerPort: 8080,
         environment: {
           'SPRING_PROFILES_ACTIVE': 'prod'
