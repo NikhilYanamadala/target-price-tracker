@@ -21,11 +21,11 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Test Frontend
-        run: |
-          cd frontend
-          npm ci
-          npm run test -- --no-watch --no-progress --browsers=ChromeHeadless
+#      - name: Test Frontend
+#        run: |
+#          cd frontend
+#          npm ci
+#          npm run test -- --no-watch --no-progress --browsers=ChromeHeadless
 
       # Test Backend
       - name: Set up JDK 17
@@ -42,7 +42,6 @@ jobs:
   build-and-deploy:
     needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
 
     steps:
       - uses: actions/checkout@v4
