@@ -26,7 +26,7 @@ export class PriceTrackerStack extends cdk.Stack {
       memoryLimitMiB: 512,
       desiredCount: 1,
       taskImageOptions: {
-        image: ecs.ContainerImage.fromAsset('../../', {
+        image: ecs.ContainerImage.fromAsset('..', {
           file: 'Dockerfile'
         }),
         containerPort: 8080,
