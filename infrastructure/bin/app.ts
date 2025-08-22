@@ -4,7 +4,7 @@ import * as cdk from 'aws-cdk-lib';
 import { PriceTrackerStack } from '../lib/price-tracker-stack';
 
 const app = new cdk.App();
-new HelloWorldStack(app, 'HelloWorldStack', {
+new PriceTrackerStack(app, 'HelloWorldStack', {
   env: {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: process.env.CDK_DEFAULT_REGION,

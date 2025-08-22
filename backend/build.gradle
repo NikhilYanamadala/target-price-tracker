@@ -1,30 +1,69 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.5.5'
-	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.springframework.boot' version '3.2.0'
+	id 'io.spring.dependency-management' version '1.1.4'
 }
 
 group = 'com.nik'
 version = '0.0.1-SNAPSHOT'
-description = 'Target Price tracker'
-
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
-}
+java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
 	mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+// Task to build Angular frontend
+task buildFrontend(type: Exec) {
+	group = 'build'
+	description = 'Build Angular frontend'
+
+	workingDir '../frontend'
+
+	// Use npm or yarn based on what's available
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'npm.cmd', 'run', 'build:backend'
+	} else {
+		commandLine 'npm', 'run', 'build:backend'
+	}
+}
+
+// Task to install npm dependencies
+task installFrontendDeps(type: Exec) {
+	group = 'build'
+	description = 'Install frontend dependencies'
+
+	workingDir '../frontend'
+
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'npm.cmd', 'install'
+	} else {
+		commandLine 'npm', 'install'
+	}
+}
+
+// Make sure frontend is built before backend
+buildFrontend.dependsOn installFrontendDeps
+processResources.dependsOn buildFrontend
+
+// Ensure static resources are included in JAR
+sourceSets {
+	main {
+		resources {
+			srcDirs = ['src/main/resources']
+		}
+	}
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jar {
+	enabled = false
 }
