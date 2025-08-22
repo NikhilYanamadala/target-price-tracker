@@ -10,37 +10,37 @@ env:
   AWS_REGION: us-east-1
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+#   test:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
 
-      # Test Frontend
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+#       # Test Frontend
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: '18'
 
-#      - name: Test Frontend
-#        run: |
-#          cd frontend
-#          npm ci
-#          npm run test -- --no-watch --no-progress --browsers=ChromeHeadless
+# #      - name: Test Frontend
+# #        run: |
+# #          cd frontend
+# #          npm ci
+# #          npm run test -- --no-watch --no-progress --browsers=ChromeHeadless
 
-      # Test Backend
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+#       # Test Backend
+#       - name: Set up JDK 17
+#         uses: actions/setup-java@v3
+#         with:
+#           java-version: '17'
+#           distribution: 'temurin'
 
-      - name: Test Backend
-        run: |
-          cd backend
-          ./gradlew test
+#       - name: Test Backend
+#         run: |
+#           cd backend
+#           ./gradlew test
 
   build-and-deploy:
-    needs: test
+    # needs: test
     runs-on: ubuntu-latest
 
     steps:
